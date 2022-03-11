@@ -16,11 +16,12 @@ const CountryDetailScreen = (props) => {
     const countriesReducer = useSelector(state => state.countryReducer)
     const [error, setError] = useState(false);
     const [isFav, setIsFav] = useState(false);
+    const [isFavLoading, setisFavLoading] = useState(true);
     const [isInitial, setIsInitial] = useState(props.route.params.isInit);
     const { singleCountry, favouriteCountries, loading } = countriesReducer;
 
     let favHandlerDispatcher;
-    let favData = [];
+
 
     const loadIndividualCountryData = useCallback(async () => {
         setError(false);
@@ -43,24 +44,6 @@ const CountryDetailScreen = (props) => {
     }, [dispatch, setError])
 
 
-
-
-    isFav ? favHandlerDispatcher = removeFromFav : favHandlerDispatcher = addToFav;
-
-    const favHandler = async (countryName, countryCode) => {
-        console.log('favhandler çalıştı');
-
-        // setIsFav(prevState => !prevState);
-        try {
-            await dispatch(favHandlerDispatcher(countryName, countryCode));
-            await loadFavouriteCountries();
-
-        } catch (error) {
-            throw error;
-        }
-    }
-
-
     useEffect(() => {
 
         loadIndividualCountryData();
@@ -73,27 +56,62 @@ const CountryDetailScreen = (props) => {
 
 
     useEffect(() => {
-        console.log('ISINITIAL', isInitial)
+
 
         loadFavouriteCountries();
-        console.log('DETAILDEN GELEN LOG')
-        console.log(favouriteCountries);
+
 
 
     }, [])
 
+    // isFav ? favHandlerDispatcher = removeFromFav : favHandlerDispatcher = addToFav;
+
+    // const favHandler = async (countryName, countryCode) => {
+    //     console.log('favhandler çalıştı');
+    //     console.log(favHandlerDispatcher)
+
+    //     try {
+    //         setisFavLoading(true);
+    //         await dispatch(favHandlerDispatcher(countryName, countryCode));
+    //         await loadFavouriteCountries();
+    //         setisFavLoading(false);
+
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
+
+
+
+
 
     useEffect(() => {
-        console.log('FAVDETAILEFFECT', isInitial, favouriteCountries)
 
 
-        const deneme = favouriteCountries.some((element) => element.countryCode === data.ThreeLetterSymbol)
-        console.log('deneme:')
-        console.log(deneme);
-        setIsFav(deneme)
+
+        const favData = favouriteCountries.some((element) => element.countryCode === data.ThreeLetterSymbol)
+
+        setIsFav(favData)
+
+        favData ? favHandlerDispatcher = removeFromFav : favHandlerDispatcher = addToFav;
+
+        const favHandler = async (countryName, countryCode) => {
+            console.log('favhandler çalıştı');
+            console.log(favHandlerDispatcher)
+
+            try {
+                setisFavLoading(true);
+                await dispatch(favHandlerDispatcher(countryName, countryCode));
+                await loadFavouriteCountries();
+                setisFavLoading(false);
+
+            } catch (error) {
+                throw error;
+            }
+        }
 
 
-        props.navigation.navigate('CountryDetailScreen', { data: data, favHandler: favHandler, isFav: deneme })
+        props.navigation.navigate('CountryDetailScreen', { data: data, favHandler: favHandler, isFav: favData, isFavLoading: isFavLoading })
 
     }, [favouriteCountries])
 
@@ -145,15 +163,19 @@ export default CountryDetailScreen
 export const screenOptions = (navData) => {
     const favHandler = navData.route.params.favHandler
     const isFav = navData.route.params.isFav
+    const favLoading = navData.route.params.favLoading
     console.log('SCREEN OPRIONSA GELEN VERI:', isFav);
     return {
         headerTitle: navData.route.params.data.Country,
         headerRight: () => {
-            return (
-                <HeaderButtons HeaderButtonComponent={CustomHeaderButton} >
-                    <Item title='Favourite' iconName={isFav ? 'star' : 'star-outline'} onPress={() => favHandler(navData.route.params.data.Country, navData.route.params.data.ThreeLetterSymbol)} />
-                </HeaderButtons>
-            )
+            if (!favLoading) {
+                return (
+                    <HeaderButtons HeaderButtonComponent={CustomHeaderButton} >
+                        <Item title='Favourite' iconName={isFav ? 'star' : 'star-outline'} onPress={() => favHandler(navData.route.params.data.Country, navData.route.params.data.ThreeLetterSymbol)} />
+                    </HeaderButtons>
+                )
+            }
+
         }
     }
 }
