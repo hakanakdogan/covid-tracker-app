@@ -2,6 +2,7 @@ const initialState = {
     worldData: [],
     continentCountries: [],
     singleCountry: [],
+    favouriteCountries: [],
     loading: true
 
 }
@@ -29,7 +30,27 @@ export default (state = initialState, action) => {
                 continentCountries: [],
 
             }
-
+        case 'GET_INDIVIDUAL_COUNTRY':
+            return {
+                ...state,
+                singleCountry: payload,
+                loading: false
+            }
+        case 'CLEAR_INDIVIDUAL_COUNTRY': {
+            return {
+                ...state,
+                singleCountry: [],
+                loading: true
+            }
+        }
+        case 'GET_FAVOURITE_COUNTRIES':
+            console.log('reducere geldi');
+            console.log(payload);
+            return {
+                ...state,
+                favouriteCountries: payload,
+                loading: false
+            }
 
 
         default:

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import axios from 'axios';
@@ -8,8 +8,19 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import ReduxThunk from 'redux-thunk'
 import countryReducer from './store/reducer/countryReducer';
+import { init } from './helpers/db';
 
 export default function App() {
+  useEffect(() => {
+    init().then(() => {
+      console.log('Initialized database');
+    }).catch((err) => {
+      console.log('An error ocurred');
+      console.log(err);
+    })
+  }, [])
+
+
 
   const rootReducer = combineReducers({
     countryReducer: countryReducer

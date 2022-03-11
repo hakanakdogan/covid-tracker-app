@@ -43,7 +43,7 @@ const CountryListComponent = (props) => {
         if (!loading) {
             const filteredDataSource = continentCountries.filter((data) => {
                 if (text !== '') {
-                    return data.Country.includes(text);
+                    return data.Country.toLowerCase().includes(text.toLowerCase());
                 } else {
                     return continentCountries;
                 }
@@ -62,11 +62,12 @@ const CountryListComponent = (props) => {
 
 
 
-    const selectCountryHandler = (name) => {
+    const selectCountryHandler = (data) => {
         props.navigation.navigate(
             'CountryDetailScreen',
             {
-                name: name
+                data,
+                isInit: true
 
             }
 
@@ -74,7 +75,7 @@ const CountryListComponent = (props) => {
 
     }
 
-    if (loading || filtered?.length === 0) {
+    if (loading || continentCountries?.length === 0) {
         return (
             <View style={[styles.container, styles.horizontal]}>
 
@@ -89,7 +90,7 @@ const CountryListComponent = (props) => {
                 data={filtered}
                 renderItem={({ item }) => (
 
-                    <CountryListRenderComponent data={item} onSelect={() => selectCountryHandler(item.Country)} />
+                    <CountryListRenderComponent data={item} onSelect={() => selectCountryHandler(item)} />
                 )}
 
                 numColumns={2}
