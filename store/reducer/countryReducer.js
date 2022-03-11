@@ -44,8 +44,7 @@ export default (state = initialState, action) => {
             }
         }
         case 'GET_FAVOURITE_COUNTRIES':
-            console.log('reducere geldi');
-            console.log(payload);
+
             return {
                 ...state,
                 favouriteCountries: payload,

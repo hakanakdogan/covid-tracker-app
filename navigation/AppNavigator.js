@@ -8,6 +8,8 @@ import CountryDetailScreen, { screenOptions as CountryDetailScreenOptions } from
 import SearchbyContinentScreen, { screenOptions as SearchbyContinentScreenOptions } from '../screens/SearchbyContinentScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
+import FavouritesScreen, { screenOptions as FavouritesScreenOptions } from '../screens/FavouritesScreen';
+
 
 
 const defaultNavOptions = {
@@ -43,6 +45,25 @@ export const WorldNavigator = () => {
             />
 
         </WorldStackNavigator.Navigator>
+    )
+}
+
+const FavouritesStackNavigator = createStackNavigator();
+
+const FavouritesNavigator = () => {
+    return (
+        <FavouritesStackNavigator.Navigator screenOptions={defaultNavOptions} >
+            <FavouritesStackNavigator.Screen
+                name='FavouritesScreen'
+                component={FavouritesScreen}
+                options={FavouritesScreenOptions}
+            />
+            <CountryStackNavigator.Screen
+                name='CountryDetailScreen'
+                component={CountryDetailScreen}
+                options={CountryDetailScreenOptions}
+            />
+        </FavouritesStackNavigator.Navigator>
     )
 }
 
@@ -89,6 +110,8 @@ export const AppNavigator = () => {
                             : 'earth-outline';
                     } else if (route.name === 'Arama') {
                         iconName = focused ? 'search' : 'search-outline';
+                    } else if (route.name === 'Favoriler') {
+                        iconName = focused ? 'star' : 'star-outline'
                     }
 
                     // You can return any component that you like here!
@@ -106,7 +129,9 @@ export const AppNavigator = () => {
             })}
         >
             <Tab.Screen name="Dünya" component={WorldNavigator} />
+            <Tab.Screen name="Favoriler" component={FavouritesNavigator} />
             <Tab.Screen name="Arama" component={CountryNavigator} />
+
         </Tab.Navigator>
     );
 }

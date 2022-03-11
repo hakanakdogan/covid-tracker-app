@@ -96,8 +96,7 @@ const CountryDetailScreen = (props) => {
         favData ? favHandlerDispatcher = removeFromFav : favHandlerDispatcher = addToFav;
 
         const favHandler = async (countryName, countryCode) => {
-            console.log('favhandler çalıştı');
-            console.log(favHandlerDispatcher)
+
 
             try {
                 setisFavLoading(true);
@@ -164,7 +163,7 @@ export const screenOptions = (navData) => {
     const favHandler = navData.route.params.favHandler
     const isFav = navData.route.params.isFav
     const favLoading = navData.route.params.favLoading
-    console.log('SCREEN OPRIONSA GELEN VERI:', isFav);
+
     return {
         headerTitle: navData.route.params.data.Country,
         headerRight: () => {

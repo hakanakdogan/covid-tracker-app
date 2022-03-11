@@ -84,6 +84,7 @@ const CountryListComponent = (props) => {
 
         )
     } else {
+
         return (
 
             <FlatList
